@@ -1,0 +1,12 @@
+---
+- hosts: worker
+  become: true
+  tasks:
+
+    - name: Print the KubeAdm Token
+      shell: echo "{{ hostvars[item]['kubeadm_token_value']['stdout'] }}"
+      with_items: "{{ groups['master'] }}"
+
+    - name: Join cluster
+      shell: |
+        sudo kubeadm join --token {{ hostvars['k8s-master']['kubeadm_token_value'] }} k8s-master:6443

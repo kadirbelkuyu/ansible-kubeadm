@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Reset Kubeadm
+      shell: |
+        sudo kubeadm reset -f
+        sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+
+    - name: Remove Docker
+      shell: |
+        sudo apt-get purge docker-ce docker-ce-cli containerd.io
+        sudo rm -rf /var/lib/docker
+        sudo rm -rf /var/lib/containerd
+
+    - name: Remove Kubernetes
+      shell: |
+        sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*
+        sudo apt-get autoremove
+        sudo rm -rf ~/.kube
+
+    - name: Remove Hosts Entries
+      shell: |
+        sudo sed -i '/k8s-master/d' /etc/hosts
+        sudo sed -i '/node-1/d' /etc/hosts
+
+    - name: Remove k8s.conf
+      shell: |
+        sudo rm -rf /etc/modules-load.d/k8s.conf
+        sudo rm -rf /etc/sysctl.d/k8s.conf

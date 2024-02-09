@@ -1,0 +1,9 @@
+---
+- name: Include Playbook 1
+  import_playbook: playbooks/kubernetes-dependencies.yaml
+
+- name: Include Playbook 2
+  import_playbook: playbooks/master-dependencies.yaml
+
+- name: Include Playbook 3
+  import_playbook: playbooks/worker-dependencies.yaml
